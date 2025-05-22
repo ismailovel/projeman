@@ -27,6 +27,10 @@ class IntroActivity : AppCompatActivity() {
         windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
         windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
 
+        binding.btnSignInIntro.setOnClickListener {
+            startActivity(Intent(this, SignInActivity::class.java))
+        }
+
         binding.btnSignUpIntro.setOnClickListener {
             startActivity(Intent(this, SignUpActivity::class.java))
         }
