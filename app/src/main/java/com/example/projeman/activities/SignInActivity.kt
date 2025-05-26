@@ -1,4 +1,4 @@
-package com.example.projeman
+package com.example.projeman.activities
 
 import android.os.Bundle
 import android.view.MenuItem
@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import com.example.projeman.R
 import com.example.projeman.databinding.ActivitySignInBinding
 
 class SignInActivity : AppCompatActivity() {

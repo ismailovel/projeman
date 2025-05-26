@@ -1,22 +1,21 @@
-package com.example.projeman
+package com.example.projeman.activities
 
+import android.content.Intent
 import android.os.Bundle
-import android.view.MenuItem
-import androidx.activity.OnBackPressedCallback
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.projeman.databinding.ActivitySignUpBinding
+import com.example.projeman.databinding.ActivityIntroBinding
 
-class SignUpActivity : AppCompatActivity() {
-    private lateinit var binding: ActivitySignUpBinding
+class IntroActivity : BaseActivity() {
+    private lateinit var binding: ActivityIntroBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivitySignUpBinding.inflate(layoutInflater)
+        binding = ActivityIntroBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -28,26 +27,12 @@ class SignUpActivity : AppCompatActivity() {
         windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
         windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
 
-        setupActionBar()
-    }
-
-    private fun setupActionBar() {
-        setSupportActionBar(binding.toolbarSignUpActivity)
-
-        val actionBar = supportActionBar
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true)
-            actionBar.setHomeAsUpIndicator(R.drawable.ic_black_color_back_24dp)
+        binding.btnSignInIntro.setOnClickListener {
+            startActivity(Intent(this, SignInActivity::class.java))
         }
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            android.R.id.home -> {
-                onBackPressedDispatcher.onBackPressed()
-                return true
-            }
+        binding.btnSignUpIntro.setOnClickListener {
+            startActivity(Intent(this, SignUpActivity::class.java))
         }
-        return super.onOptionsItemSelected(item)
     }
 }

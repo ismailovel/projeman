@@ -1,21 +1,24 @@
-package com.example.projeman
+package com.example.projeman.activities
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import com.example.projeman.databinding.ActivityIntroBinding
+import com.example.projeman.databinding.ActivitySplashBinding
 
-class IntroActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityIntroBinding
+class SplashActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySplashBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityIntroBinding.inflate(layoutInflater)
+        binding = ActivitySplashBinding.inflate(layoutInflater)
         setContentView(binding.root)
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -27,12 +30,12 @@ class IntroActivity : AppCompatActivity() {
         windowInsetsController.hide(WindowInsetsCompat.Type.statusBars())
         windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
 
-        binding.btnSignInIntro.setOnClickListener {
-            startActivity(Intent(this, SignInActivity::class.java))
-        }
+        val typeFace: Typeface = Typeface.createFromAsset(assets, "carbon bl.ttf")
+        binding.tvAppName.typeface = typeFace
 
-        binding.btnSignUpIntro.setOnClickListener {
-            startActivity(Intent(this, SignUpActivity::class.java))
-        }
+        Handler(Looper.getMainLooper()).postDelayed({
+            startActivity(Intent(this, IntroActivity::class.java))
+            finish()
+        }, 2500)
     }
 }
