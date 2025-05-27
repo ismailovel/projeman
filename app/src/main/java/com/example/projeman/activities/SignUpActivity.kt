@@ -1,7 +1,9 @@
 package com.example.projeman.activities
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -10,7 +12,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.projeman.R
 import com.example.projeman.databinding.ActivitySignUpBinding
 
-class SignUpActivity : AppCompatActivity() {
+class SignUpActivity : BaseActivity() {
     private lateinit var binding: ActivitySignUpBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +31,10 @@ class SignUpActivity : AppCompatActivity() {
         windowInsetsController.hide(WindowInsetsCompat.Type.navigationBars())
 
         setupActionBar()
+
+        binding.btnSignUp.setOnClickListener {
+            registerUser()
+        }
     }
 
     private fun setupActionBar() {
@@ -49,5 +55,34 @@ class SignUpActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun registerUser() {
+        val name: String = binding.etName.text.toString().trim()
+        val email: String = binding.etEmail.text.toString().trim()
+        val password: String = binding.etPassword.text.toString().trim()
+
+        if(validateForm(name, email, password)) {
+            Toast.makeText(this@SignUpActivity, "Now we can register a new user", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun validateForm(name: String, email: String, password: String) : Boolean {
+        return when {
+            TextUtils.isEmpty(name) -> {
+                showErrorSnackBar("Please enter a name")
+                false
+            }
+            TextUtils.isEmpty(email) -> {
+                showErrorSnackBar("Please enter a email address")
+                false
+            }
+            TextUtils.isEmpty(password) -> {
+                showErrorSnackBar("Please enter a password")
+                false
+            } else -> {
+                true
+            }
+        }
     }
 }

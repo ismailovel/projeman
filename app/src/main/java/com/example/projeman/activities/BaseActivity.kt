@@ -2,6 +2,7 @@ package com.example.projeman.activities
 
 import android.app.Dialog
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -40,7 +41,6 @@ open class BaseActivity : AppCompatActivity() {
 
     fun showProgressDialog(text: String) {
         mProgressDialog = Dialog(this)
-
         mProgressDialog.setContentView(R.layout.dialog_progress)
         mProgressDialog.findViewById<TextView>(R.id.tv_progress_text).text = text
         mProgressDialog.show()
@@ -68,8 +68,7 @@ open class BaseActivity : AppCompatActivity() {
 
     fun showErrorSnackBar(message: String) {
         val snackBar = Snackbar.make(findViewById(android.R.id.content), message, Snackbar.LENGTH_LONG)
-        val snackBarView = snackBar.view
-        snackBarView.setBackgroundColor(ContextCompat.getColor(this, R.color.snackbar_error_color))
+        snackBar.setBackgroundTint(ContextCompat.getColor(this, R.color.snackbar_error_color))
         snackBar.show()
     }
 }
