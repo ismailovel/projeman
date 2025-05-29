@@ -5,7 +5,6 @@ import android.text.TextUtils
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -76,7 +75,7 @@ class SignUpActivity : BaseActivity() {
                     FirebaseAuth.getInstance().signOut()
                     finish()
                 } else {
-                    Toast.makeText(this, task.exception!!.message, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "Registration failed", Toast.LENGTH_SHORT).show()
                 }
             }
         }
