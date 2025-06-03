@@ -11,6 +11,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.projeman.R
 import com.example.projeman.databinding.ActivitySignInBinding
+import com.example.projeman.models.User
 import com.google.firebase.auth.FirebaseAuth
 
 class SignInActivity : BaseActivity() {
@@ -81,6 +82,12 @@ class SignInActivity : BaseActivity() {
                     }
                 }
         }
+    }
+
+    fun signInSuccess(user: User) {
+        hideProgressDialog()
+        startActivity(Intent(this, MainActivity::class.java))
+        finish()
     }
 
     private fun validateForm(email: String, password: String): Boolean {
