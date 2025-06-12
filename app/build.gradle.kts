@@ -56,4 +56,6 @@ dependencies {
     implementation(libs.firebase.firestore)
 
     implementation (libs.circleimageview)
+    implementation (libs.glide)
+    annotationProcessor (libs.compiler)
 }
