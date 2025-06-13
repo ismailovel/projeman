@@ -3,6 +3,7 @@ package com.example.projeman.firebase
 import android.app.Activity
 import android.util.Log
 import com.example.projeman.activities.MainActivity
+import com.example.projeman.activities.MyProfileActivity
 import com.example.projeman.activities.SignInActivity
 import com.example.projeman.activities.SignUpActivity
 import com.example.projeman.models.User
@@ -27,7 +28,7 @@ class FirestoreClass {
             }
     }
 
-    fun signInUser(activity: Activity) {
+    fun loadUserData(activity: Activity) {
         mFireStore.collection(Constants.USERS)
             .document(getCurrentUserId())
             .get()
@@ -40,6 +41,9 @@ class FirestoreClass {
                     }
                     is MainActivity -> {
                         activity.updateNavigationUserDetails(loggedInUser)
+                    }
+                    is MyProfileActivity -> {
+                        activity.setUserDataInUI(loggedInUser)
                     }
                 }
             }
