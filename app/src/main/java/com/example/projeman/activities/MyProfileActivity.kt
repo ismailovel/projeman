@@ -22,6 +22,7 @@ import com.example.projeman.R
 import com.example.projeman.databinding.ActivityMyProfileBinding
 import com.example.projeman.firebase.FirestoreClass
 import com.example.projeman.models.User
+import com.example.projeman.utils.Constants
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageReference
 import java.io.IOException
@@ -35,6 +36,7 @@ class MyProfileActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMyProfileBinding
 
+    private lateinit var mUserDetails: User
     private var mSelectedImageFileUri: Uri? = null
     private var mProfileImageURL: String = ""
 
@@ -80,6 +82,9 @@ class MyProfileActivity : BaseActivity() {
         binding.btnUpdate.setOnClickListener {
             if (mSelectedImageFileUri != null) {
                 uploadUserImage()
+            } else {
+                showProgressDialog(resources.getString(R.string.please_wait))
+                updateUserProfileData()
             }
         }
     }
@@ -143,6 +148,8 @@ class MyProfileActivity : BaseActivity() {
     }
 
     fun setUserDataInUI(user: User) {
+        mUserDetails = user
+
         Glide
             .with(this)
             .load(user.image)
@@ -155,6 +162,24 @@ class MyProfileActivity : BaseActivity() {
         if (user.mobile != 0L) {
             binding.etMobile.setText(user.mobile.toString())
         }
+    }
+
+    private fun updateUserProfileData() {
+        val userHashMap = HashMap<String, Any>()
+
+        if (mProfileImageURL.isNotEmpty() && mProfileImageURL != mUserDetails.image) {
+            userHashMap[Constants.IMAGE] = mProfileImageURL
+        }
+
+        if (binding.etName.text.toString() != mUserDetails.name) {
+            userHashMap[Constants.NAME] = binding.etName.text.toString()
+        }
+
+        if (binding.etMobile.text.toString() != mUserDetails.mobile.toString()) {
+            userHashMap[Constants.MOBILE] = binding.etMobile.text.toString().toLong()
+        }
+
+        FirestoreClass().updateUserProfileData(this, userHashMap)
     }
 
     private fun uploadUserImage() {
@@ -173,8 +198,7 @@ class MyProfileActivity : BaseActivity() {
                     Log.i("Firebase Image URL", uri.toString())
                     mProfileImageURL = uri.toString()
 
-                    hideProgressDialog()
-                    // TODO UpdateUserProfileData
+                    updateUserProfileData()
                 }
             }.addOnFailureListener { exception ->
                 Toast.makeText(
@@ -191,5 +215,10 @@ class MyProfileActivity : BaseActivity() {
     private fun getFileExtension(uri: Uri?): String? {
         return MimeTypeMap.getSingleton()
             .getExtensionFromMimeType(contentResolver.getType(uri!!))
+    }
+
+    fun profileUpdateSuccess() {
+        hideProgressDialog()
+        finish()
     }
 }
