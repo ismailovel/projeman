@@ -17,12 +17,13 @@ import com.example.projeman.R
 import com.example.projeman.databinding.ActivityMainBinding
 import com.example.projeman.firebase.FirestoreClass
 import com.example.projeman.models.User
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedListener {
 
-    companion object{
+    companion object {
         const val MY_PROFILE_REQUEST_CODE: Int = 11
     }
 
@@ -44,6 +45,11 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
         binding.navView.setNavigationItemSelectedListener(this)
 
         FirestoreClass().loadUserData(this)
+
+        val appBarMain = binding.appBarMain
+        appBarMain.fabCreateBoard.setOnClickListener {
+            startActivity(Intent(this, CreateBoardActivity::class.java))
+        }
     }
 
     private fun setupActionBar() {
@@ -96,7 +102,10 @@ class MainActivity : BaseActivity(), NavigationView.OnNavigationItemSelectedList
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.nav_my_profile -> {
-                startActivityForResult(Intent(this, MyProfileActivity::class.java), MY_PROFILE_REQUEST_CODE)
+                startActivityForResult(
+                    Intent(this, MyProfileActivity::class.java),
+                    MY_PROFILE_REQUEST_CODE
+                )
             }
 
             R.id.nav_sign_out -> {
