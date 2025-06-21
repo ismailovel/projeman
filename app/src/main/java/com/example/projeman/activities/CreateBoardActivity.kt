@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -18,7 +19,11 @@ import androidx.core.view.WindowInsetsCompat
 import com.bumptech.glide.Glide
 import com.example.projeman.R
 import com.example.projeman.databinding.ActivityCreateBoardBinding
+import com.example.projeman.firebase.FirestoreClass
+import com.example.projeman.models.Board
 import com.example.projeman.utils.Constants
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import java.io.IOException
 
 class CreateBoardActivity : BaseActivity() {
@@ -27,6 +32,8 @@ class CreateBoardActivity : BaseActivity() {
     private var mSelectedImageFileUri: Uri? = null
 
     private lateinit var mUserName: String
+
+    private var mBoardImageURL: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -68,6 +75,58 @@ class CreateBoardActivity : BaseActivity() {
                 )
             }
         }
+
+        binding.btnCreate.setOnClickListener {
+            if (mSelectedImageFileUri != null) {
+                uploadBoardImage()
+            } else {
+                showProgressDialog(resources.getString(R.string.please_wait))
+                createBoard()
+            }
+        }
+    }
+
+    private fun createBoard() {
+        val assignedUsersArrayList: ArrayList<String> = ArrayList()
+        assignedUsersArrayList.add(getCurrentUserID())
+
+        var board = Board(
+            binding.etBoardName.text.toString(),
+            mBoardImageURL,
+            mUserName,
+            assignedUsersArrayList
+        )
+
+        FirestoreClass().createBoard(this, board)
+    }
+
+    private fun uploadBoardImage() {
+        showProgressDialog(resources.getString(R.string.please_wait))
+
+            val sRef: StorageReference = FirebaseStorage.getInstance().reference.child(
+                "BOARD_IMAGE" + System.currentTimeMillis() + "." +
+                        Constants.getFileExtension(
+                            this, mSelectedImageFileUri
+                        )
+            )
+
+            sRef.putFile(mSelectedImageFileUri!!).addOnSuccessListener { taskSnapshot ->
+
+                taskSnapshot.metadata!!.reference!!.downloadUrl.addOnSuccessListener { uri ->
+                    Log.i("Board Image URL", uri.toString())
+                    mBoardImageURL = uri.toString()
+
+                    createBoard()
+                }
+            }.addOnFailureListener { exception ->
+                Toast.makeText(
+                    this,
+                    exception.message,
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                hideProgressDialog()
+            }
     }
 
     fun boardCreatedSuccessfully() {
