@@ -21,10 +21,12 @@ import com.example.projeman.databinding.ActivityCreateBoardBinding
 import com.example.projeman.utils.Constants
 import java.io.IOException
 
-class CreateBoardActivity : AppCompatActivity() {
+class CreateBoardActivity : BaseActivity() {
     private lateinit var binding: ActivityCreateBoardBinding
 
     private var mSelectedImageFileUri: Uri? = null
+
+    private lateinit var mUserName: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,6 +40,10 @@ class CreateBoardActivity : AppCompatActivity() {
         }
 
         setupActionBar()
+
+        if (intent.hasExtra(Constants.NAME)) {
+            mUserName = intent.getStringExtra(Constants.NAME)!!
+        }
 
         binding.ivBoardImage.setOnClickListener {
             Toast.makeText(this, "test", Toast.LENGTH_SHORT).show()
@@ -62,6 +68,11 @@ class CreateBoardActivity : AppCompatActivity() {
                 )
             }
         }
+    }
+
+    fun boardCreatedSuccessfully() {
+        hideProgressDialog()
+        finish()
     }
 
     private fun setupActionBar() {
