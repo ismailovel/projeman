@@ -8,6 +8,7 @@ import com.example.projeman.activities.MainActivity
 import com.example.projeman.activities.MyProfileActivity
 import com.example.projeman.activities.SignInActivity
 import com.example.projeman.activities.SignUpActivity
+import com.example.projeman.activities.TaskListActivity
 import com.example.projeman.models.Board
 import com.example.projeman.models.User
 import com.example.projeman.utils.Constants
@@ -44,6 +45,21 @@ class FirestoreClass {
                 Log.e(activity.javaClass.simpleName, "Error while creating a board", e)
             }
     }
+
+    fun getBoardDetails(activity: TaskListActivity, documentId: String) {
+        mFireStore.collection(Constants.BOARDS)
+            .document(documentId)
+            .get()
+            .addOnSuccessListener { document ->
+                Log.i(activity.javaClass.simpleName, document.toString())
+
+                activity.boardDetails(document.toObject(Board::class.java)!!)
+            }.addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while getting boards list", e)
+            }
+    }
+
 
     fun getBoardsList(activity: MainActivity) {
         mFireStore.collection(Constants.BOARDS)

@@ -3,19 +3,54 @@ package com.example.projeman.activities
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.projeman.R
+import com.example.projeman.databinding.ActivityTaskListBinding
+import com.example.projeman.firebase.FirestoreClass
+import com.example.projeman.models.Board
+import com.example.projeman.utils.Constants
 
-class TaskListActivity : AppCompatActivity() {
+class TaskListActivity : BaseActivity() {
+
+    private lateinit var binding: ActivityTaskListBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_task_list)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        binding = ActivityTaskListBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        var boardDocumentId = ""
+        if (intent.hasExtra(Constants.DOCUMENT_ID)) {
+            boardDocumentId = intent.getStringExtra(Constants.DOCUMENT_ID)!!
+        }
+
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().getBoardDetails(this, boardDocumentId)
+    }
+
+    private fun setupActionBar(title: String) {
+        val toolbarTaskListActivity = binding.toolbarTaskListActivity
+        setSupportActionBar(toolbarTaskListActivity)
+        val actionBar = supportActionBar
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true)
+            actionBar.setHomeAsUpIndicator(R.drawable.ic_white_color_back_24dp)
+            actionBar.title = title
+        }
+
+        toolbarTaskListActivity.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    fun boardDetails(board: Board) {
+        hideProgressDialog()
+        setupActionBar(board.name)
     }
 }
