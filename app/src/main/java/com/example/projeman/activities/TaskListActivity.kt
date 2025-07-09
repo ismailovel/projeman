@@ -6,10 +6,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.projeman.R
+import com.example.projeman.adapters.TaskListItemsAdapter
 import com.example.projeman.databinding.ActivityTaskListBinding
 import com.example.projeman.firebase.FirestoreClass
 import com.example.projeman.models.Board
+import com.example.projeman.models.Task
 import com.example.projeman.utils.Constants
 
 class TaskListActivity : BaseActivity() {
@@ -52,5 +55,15 @@ class TaskListActivity : BaseActivity() {
     fun boardDetails(board: Board) {
         hideProgressDialog()
         setupActionBar(board.name)
+
+        val addTaskList = Task(resources.getString(R.string.add_list))
+        board.taskList.add(addTaskList)
+
+        binding.rvTaskList.layoutManager =
+            LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvTaskList.setHasFixedSize(true)
+
+        val adapter = TaskListItemsAdapter(this, board.taskList)
+        binding.rvTaskList.adapter = adapter
     }
 }
