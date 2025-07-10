@@ -46,6 +46,21 @@ open class TaskListItemsAdapter(
                 holder.binding.tvAddTaskList.visibility = View.GONE
                 holder.binding.llTaskItem.visibility = View.VISIBLE
             }
+
+            holder.binding.tvTaskListTitle.text = model.title
+            holder.binding.tvAddTaskList.setOnClickListener {
+                holder.binding.tvAddTaskList.visibility = View.GONE
+                holder.binding.cvAddTaskListName.visibility = View.VISIBLE
+            }
+
+            holder.binding.ibCloseListName.setOnClickListener {
+                holder.binding.tvAddTaskList.visibility = View.VISIBLE
+                holder.binding.cvAddTaskListName.visibility = View.GONE
+            }
+
+            holder.binding.ibDoneListName.setOnClickListener {
+                // TODO create entry in DB and display the task list
+            }
         }
     }
 
