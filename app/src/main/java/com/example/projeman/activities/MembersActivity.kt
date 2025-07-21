@@ -6,12 +6,16 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.projeman.R
+import com.example.projeman.adapters.MembersListItemsAdapter
 import com.example.projeman.databinding.ActivityMembersBinding
+import com.example.projeman.firebase.FirestoreClass
 import com.example.projeman.models.Board
+import com.example.projeman.models.User
 import com.example.projeman.utils.Constants
 
-class MembersActivity : AppCompatActivity() {
+class MembersActivity : BaseActivity() {
 
     private lateinit var binding: ActivityMembersBinding
     private lateinit var mBoardDetails: Board
@@ -32,6 +36,19 @@ class MembersActivity : AppCompatActivity() {
         }
 
         setupActionBar()
+
+        showProgressDialog(resources.getString(R.string.please_wait))
+        FirestoreClass().getAssignedMembersListDetails(this, mBoardDetails.assignedTo)
+    }
+
+    fun setupMembersList(list: ArrayList<User>) {
+        hideProgressDialog()
+
+        binding.rvMembersList.layoutManager = LinearLayoutManager(this)
+        binding.rvMembersList.setHasFixedSize(true)
+
+        val adapter = MembersListItemsAdapter(this, list)
+        binding.rvMembersList.adapter = adapter
     }
 
     private fun setupActionBar() {

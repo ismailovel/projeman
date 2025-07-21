@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.Toast
 import com.example.projeman.activities.CreateBoardActivity
 import com.example.projeman.activities.MainActivity
+import com.example.projeman.activities.MembersActivity
 import com.example.projeman.activities.MyProfileActivity
 import com.example.projeman.activities.SignInActivity
 import com.example.projeman.activities.SignUpActivity
@@ -152,5 +153,24 @@ class FirestoreClass {
             currentUserID = currentUser.uid
         }
         return currentUserID
+    }
+
+    fun getAssignedMembersListDetails(activity: MembersActivity, assignedTo: ArrayList<String>) {
+        mFireStore.collection(Constants.USERS)
+            .whereIn(Constants.ID, assignedTo)
+            .get()
+            .addOnSuccessListener { document ->
+                Log.e(activity.javaClass.simpleName, document.documents.toString())
+
+                val usersList: ArrayList<User> = ArrayList()
+                for (i in document.documents) {
+                    val user = i.toObject(User::class.java)!!
+                    usersList.add(user)
+                }
+                activity.setupMembersList(usersList)
+            }.addOnFailureListener { e ->
+                activity.hideProgressDialog()
+                Log.e(activity.javaClass.simpleName, "Error while getting members list", e)
+            }
     }
 }
