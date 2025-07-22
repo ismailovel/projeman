@@ -1,6 +1,11 @@
 package com.example.projeman.activities
 
+import android.app.Dialog
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -10,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.projeman.R
 import com.example.projeman.adapters.MembersListItemsAdapter
 import com.example.projeman.databinding.ActivityMembersBinding
+import com.example.projeman.databinding.DialogSearchMemberBinding
 import com.example.projeman.firebase.FirestoreClass
 import com.example.projeman.models.Board
 import com.example.projeman.models.User
@@ -61,5 +67,44 @@ class MembersActivity : BaseActivity() {
         }
 
         binding.toolbarMembersActivity.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_add_member, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.action_add_member -> {
+                dialogSearchMember()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun dialogSearchMember() {
+        val dialog = Dialog(this)
+        val dialogBinding = DialogSearchMemberBinding.inflate(layoutInflater)
+        dialog.setContentView(dialogBinding.root)
+        dialogBinding.tvAdd.setOnClickListener {
+            val email = dialogBinding.etEmailSearchMember.text.toString()
+
+            if (email.isNotEmpty()) {
+                dialog.dismiss()
+                // TODO implement adding member logic
+            } else {
+                Toast.makeText(
+                    this@MembersActivity,
+                    "Please enter members email address",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+        dialogBinding.tvCancel.setOnClickListener {
+            dialog.dismiss()
+        }
+        dialog.show()
     }
 }
