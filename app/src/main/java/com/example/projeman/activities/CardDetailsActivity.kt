@@ -1,6 +1,7 @@
 package com.example.projeman.activities
 
 import android.os.Bundle
+import android.view.Menu
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -31,6 +32,10 @@ class CardDetailsActivity : AppCompatActivity() {
 
         getIntentData()
         setupActionBar()
+
+        binding.etNameCardDetails.setText(mBoardDetails.taskList[mTaskListPosition].cards[mCardPosition].name)
+        binding.etNameCardDetails.requestFocus()
+        binding.etNameCardDetails.setSelection(binding.etNameCardDetails.text.toString().length)
     }
 
     private fun setupActionBar() {
@@ -43,6 +48,11 @@ class CardDetailsActivity : AppCompatActivity() {
         }
 
         binding.toolbarCardDetailsActivity.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_delete_card, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     private fun getIntentData() {
