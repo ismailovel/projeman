@@ -46,6 +46,11 @@ class CardDetailsActivity : BaseActivity() {
         binding.etNameCardDetails.requestFocus()
         binding.etNameCardDetails.setSelection(binding.etNameCardDetails.text.toString().length)
 
+        mSelectedColor = mBoardDetails.taskList[mTaskListPosition].cards[mCardPosition].labelColor
+        if (mSelectedColor.isNotEmpty()) {
+            setColor()
+        }
+
         binding.btnUpdateCardDetails.setOnClickListener {
             if (binding.etNameCardDetails.text.toString().isNotEmpty()) {
                 updateCardDetails()
@@ -177,7 +182,8 @@ class CardDetailsActivity : BaseActivity() {
         val listDialog = object : LabelColorListDialog(
             this,
             colorsList,
-            resources.getString(R.string.str_select_label_color)
+            resources.getString(R.string.str_select_label_color),
+            mSelectedColor
         ) {
             override fun onItemSelected(color: String) {
                 mSelectedColor = color
