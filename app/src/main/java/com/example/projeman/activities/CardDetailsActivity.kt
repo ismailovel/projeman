@@ -13,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.projeman.R
 import com.example.projeman.databinding.ActivityCardDetailsBinding
 import com.example.projeman.dialogs.LabelColorListDialog
+import com.example.projeman.dialogs.MembersListDialog
 import com.example.projeman.firebase.FirestoreClass
 import com.example.projeman.models.Board
 import com.example.projeman.models.Card
@@ -63,6 +64,10 @@ class CardDetailsActivity : BaseActivity() {
 
         binding.tvSelectLabelColor.setOnClickListener {
             labelColorsListDialog()
+        }
+
+        binding.tvSelectMembers.setOnClickListener {
+            membersListDialog()
         }
     }
 
@@ -129,6 +134,39 @@ class CardDetailsActivity : BaseActivity() {
         if (intent.hasExtra(Constants.BOARD_MEMBERS_LIST)) {
             mMembersDetailList = intent.getParcelableArrayListExtra(Constants.BOARD_MEMBERS_LIST)!!
         }
+    }
+
+    private fun membersListDialog() {
+        var cardAssignedMembersList = mBoardDetails
+            .taskList[mTaskListPosition]
+            .cards[mCardPosition]
+            .assignedTo
+
+        if (cardAssignedMembersList.size > 0) {
+            for (i in mMembersDetailList.indices)
+                for (j in cardAssignedMembersList) {
+                    if (mMembersDetailList[i].id == j) {
+                        mMembersDetailList[i].selected = true
+                    }
+                }
+        } else {
+            for (i in mMembersDetailList.indices)
+                mMembersDetailList[i].selected = false
+        }
+
+        val listDialog = object : MembersListDialog(
+            this,
+            mMembersDetailList,
+            resources.getString(R.string.str_select_member)
+        ) {
+            override fun onItemSelected(
+                user: User,
+                action: String
+            ) {
+                TODO("Implement the selected Members functionality")
+            }
+        }
+        listDialog.show()
     }
 
     private fun updateCardDetails() {
